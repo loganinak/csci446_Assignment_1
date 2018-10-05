@@ -23,6 +23,7 @@ class MazeLoader:
 
     # Prints the maze better than the built in print function
     def printMaze(maze):
+        # Slows print down to make it viewable
         time.sleep(0.5)
         for line in maze:
             for space in line:
@@ -63,11 +64,12 @@ class Search:
 
     # Steps back to the nearest intersection, then jumps to point
     def backTrace(self):
-        dirs = self.getDirs('.')
-        while(len(dirs) == 1):
-            if(len(dirs) == 1):
-                self.maze[self.pos[0]][self.pos[1]] = ' '
-                self.pos = dirs
+        dirs = self.getDirs(['.', ' '])
+        while(len(dirs) <= 2):
+            for spot in dirs:
+                if(self.maze[spot[0]][spot[1]] == '.'):
+                    self.maze[self.pos[0]][self.pos[1]] = ' '
+                    self.pos = spot
 
             dirs = self.getDirs('.')
 
