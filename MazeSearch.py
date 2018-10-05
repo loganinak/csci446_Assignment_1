@@ -50,7 +50,6 @@ class Search:
     # Takes either an array or singe char and returns all occurrences of characters close within  a step
     def getDirs(self, chars):
         dirs = []
-        print(self.pos)
         up = [self.pos[0] - 1, self.pos[1]]
         down = [self.pos[0] + 1, self.pos[1]]
         left = [self.pos[0], self.pos[1] - 1]
@@ -64,14 +63,17 @@ class Search:
 
     # Steps back to the nearest intersection, then jumps to point
     def backTrace(self):
-        dirs = self.getDirs(['.', ' '])
-        while(len(dirs) <= 2):
-            for spot in dirs:
-                if(self.maze[spot[0]][spot[1]] == '.'):
-                    self.maze[self.pos[0]][self.pos[1]] = ' '
-                    self.pos = spot
+        dirs = self.getDirs('.')
+        while(len(dirs) == 1):
+            openSpaces = self.getDirs(' ')
+            if(len(openSpaces) == 1):
+                self.maze[self.pos[0]][self.pos[1]] = ' '
+                self.pos = dirs[0]
 
             dirs = self.getDirs('.')
+        
+            self.pos = dirs[0]
+            MazeLoader.printMaze(self.maze)
 
 
 class DFS(Search):
@@ -96,7 +98,7 @@ class DFS(Search):
 
             if(len(self.getDirs([' ', '*'])) == 0):
                 self.backTrace()
-                self.pos = unexploredPaths.pop()
+                self.pos = self.unexploredPaths.pop()
 
             MazeLoader.printMaze(self.maze)
 
