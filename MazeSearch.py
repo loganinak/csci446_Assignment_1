@@ -163,5 +163,5 @@ class DFS(Search):
 
         print("Goal found")
 
-s = DFS(MazeLoader.loadMaze("../A1/mazes/large_maze.txt"))
+s = DFS(MazeLoader.loadMaze("../A1/mazes/medium_maze.txt"))
 s.search()
