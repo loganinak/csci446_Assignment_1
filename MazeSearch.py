@@ -65,6 +65,19 @@ class Search:
     # Steps back to the nearest intersection, removing dots
     def backTrace(self):
         dirs = self.getDirs('.')
+        # handle running into other paths
+        if(len(dirs) == 2):
+            temp = self.pos
+            self.pos = dirs[0]
+            numPaths = len(self.getDirs([' ', '*', '.']))
+            self.pos = dirs[1]
+            if(numPaths > len(self.getDirs([' ', '*', '.']))):
+                self.pos = dirs[1]
+                dirs = self.getDirs('.')
+            else:
+                self.pos = dirs[0]
+                dirs = self.getDirs('.')
+
         while(len(dirs) == 1):
             MazeLoader.printMaze(self.maze)
 
