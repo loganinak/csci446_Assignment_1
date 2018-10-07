@@ -79,12 +79,14 @@ class Search:
                 dirs = self.getDirs('.')
 
         while(len(dirs) == 1):
-            MazeLoader.printMaze(self.maze)
-
             openSpaces = self.getDirs(' ')
-            if(len(openSpaces) == 1):
+            if(len(openSpaces) < 2):
                 self.maze[self.pos[0]][self.pos[1]] = ' '
                 self.pos = dirs[0]
+            else:
+                break
+
+            MazeLoader.printMaze(self.maze)
 
             dirs = self.getDirs('.')
 
@@ -92,14 +94,17 @@ class Search:
     def traceToXing(self):
         dirs = self.getDirs([' ', '*'])
         while(len(dirs) == 1):
-            MazeLoader.printMaze(self.maze)
+            
+
             if(self.maze[self.pos[0]][self.pos[1]] == '*'):
                 return '*'
 
-            dirs = self.getDirs([' ', '*'])
-
             self.maze[self.pos[0]][self.pos[1]] = '.'
             self.pos = dirs[0]
+
+            MazeLoader.printMaze(self.maze)
+
+            dirs = self.getDirs([' ', '*'])
 
         # Check for goal on dead ends and intersections
         if(self.maze[self.pos[0]][self.pos[1]] == '*'):
@@ -133,8 +138,9 @@ class DFS(Search):
                 self.pos = openDirs.pop()
 
                 # Put the rest of possible directions in a stack
-                for _ in openDirs:
-                    self.unexploredPaths.append(openDirs.pop())
+                for path in openDirs:
+                    print(path)
+                    self.unexploredPaths.append(path)
 
 
             pathResult = self.traceToXing()
