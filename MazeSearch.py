@@ -129,8 +129,25 @@ class DFS(Search):
 
             # Handle dead ends
             if(pathResult == '%'):
+                paths = self.getDirs([' ', '*'])
+                for path in paths:
+                    if(self.unexploredPaths.count(path) != 0):
+                        self.unexploredPaths.remove(path)
+
                 self.backTrace()
-                self.pos = self.unexploredPaths.pop()
+                paths = self.getDirs([' ', '*'])
+
+                nextPath = self.unexploredPaths.pop()
+                while(paths.count(nextPath) != 1):
+                    self.maze[self.pos[0]][self.pos[1]] = ' '
+                    self.pos = self.getDirs(['.']).pop()
+                    self.backTrace()
+                    paths = self.getDirs([' ', '*'])
+                    for path in paths:
+                        if(self.unexploredPaths.count(path) != 0):
+                            self.unexploredPaths.remove(path)
+
+                self.pos = nextPath
             # Handle intersections
             elif(pathResult == ' '):
                 self.maze[self.pos[0]][self.pos[1]] = '.'
@@ -139,7 +156,6 @@ class DFS(Search):
 
                 # Put the rest of possible directions in a stack
                 for path in openDirs:
-                    print(path)
                     self.unexploredPaths.append(path)
 
 
@@ -147,5 +163,5 @@ class DFS(Search):
 
         print("Goal found")
 
-s = DFS(MazeLoader.loadMaze("../A1/mazes/medium_maze.txt"))
+s = DFS(MazeLoader.loadMaze("../A1/mazes/large_maze.txt"))
 s.search()
