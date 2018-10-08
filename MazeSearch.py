@@ -33,6 +33,7 @@ class MazeLoader:
 # Base class for search functions
 class Search:
     def __init__(self, maze):
+        self.unexploredPaths = []
         self.maze = maze
         self.pos = Search.findChar(self.maze, 'P')
 
@@ -79,6 +80,9 @@ class Search:
                 dirs = self.getDirs('.')
 
         while(len(dirs) == 1):
+            if(self.unexploredPaths.count(self.pos) != 0):
+                self.unexploredPaths.remove(self.pos)
+
             openSpaces = self.getDirs(' ')
             if(len(openSpaces) < 2):
                 self.maze[self.pos[0]][self.pos[1]] = ' '
@@ -94,7 +98,8 @@ class Search:
     def traceToXing(self):
         dirs = self.getDirs([' ', '*'])
         while(len(dirs) == 1):
-            
+            if(self.unexploredPaths.count(self.pos) != 0):
+                self.unexploredPaths.remove(self.pos)
 
             if(self.maze[self.pos[0]][self.pos[1]] == '*'):
                 return '*'
@@ -120,7 +125,6 @@ class Search:
 
 
 class DFS(Search):
-    unexploredPaths = []
 
     def search(self):
         pathResult = self.traceToXing()
@@ -135,7 +139,6 @@ class DFS(Search):
                         self.unexploredPaths.remove(path)
 
                 self.backTrace()
-                paths = self.getDirs([' ', '*'])
 
                 nextPath = self.unexploredPaths.pop()
                 while(paths.count(nextPath) != 1):
