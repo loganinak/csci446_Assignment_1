@@ -34,6 +34,7 @@ class MazeLoader:
 # Base class for search functions
 class Search:
     def __init__(self, maze):
+        self.path = []
         self.unexploredPaths = []
         self.maze = maze
         self.pos = Search.findChar(self.maze, 'P')
@@ -65,36 +66,12 @@ class Search:
 
         return dirs
 
-    # Steps back to the nearest intersection, removing dots
-    def backTrace(self):
-        dirs = self.getDirs('.')
-        # handle running into other paths
-        if(len(dirs) == 2):
-            temp = self.pos
-            self.pos = dirs[0]
-            numPaths = len(self.getDirs([' ', '*', '.']))
-            self.pos = dirs[1]
-            if(numPaths > len(self.getDirs([' ', '*', '.']))):
-                self.pos = dirs[1]
-                dirs = self.getDirs('.')
-            else:
-                self.pos = dirs[0]
-                dirs = self.getDirs('.')
+    # Steps back to the intersection near path, removing dots
+    def backTrace(self, path):
+        while(self.getDirs(['.', '*', ' ']).count(path) != 1):
+            self.maze[self.pos[0]][self.pos[1]] = ' '
+            self.pos = self.path.pop()
 
-        while(len(dirs) == 1):
-            if(self.unexploredPaths.count(self.pos) != 0):
-                self.unexploredPaths.remove(self.pos)
-
-            openSpaces = self.getDirs(' ')
-            if(len(openSpaces) < 2):
-                self.maze[self.pos[0]][self.pos[1]] = ' '
-                self.pos = dirs[0]
-            else:
-                break
-
-            MazeLoader.printMaze(self.maze)
-
-            dirs = self.getDirs('.')
 
     # Step to nearest crossing, leaving dots. Returns '*' when found
     def traceToXing(self):
@@ -107,12 +84,15 @@ class Search:
                 return '*'
 
             self.maze[self.pos[0]][self.pos[1]] = '.'
+            self.path.append(self.pos)
             self.pos = dirs[0]
+            
 
             MazeLoader.printMaze(self.maze)
 
             dirs = self.getDirs([' ', '*'])
 
+        self.path.append(self.pos)
         # Check for goal on dead ends and intersections
         if(self.maze[self.pos[0]][self.pos[1]] == '*'):
             return '*'
@@ -135,27 +115,13 @@ class DFS(Search):
 
             # Handle dead ends
             if(pathResult == '%'):
-                paths = self.getDirs([' ', '*'])
-                for path in paths:
-                    if(self.unexploredPaths.count(path) != 0):
-                        self.unexploredPaths.remove(path)
-
-                self.backTrace()
-
                 nextPath = self.unexploredPaths.pop()
-                while(paths.count(nextPath) != 1):
-                    self.maze[self.pos[0]][self.pos[1]] = ' '
-                    self.pos = self.getDirs(['.']).pop()
-                    self.backTrace()
-                    paths = self.getDirs([' ', '*'])
-                    for path in paths:
-                        if(self.unexploredPaths.count(path) != 0):
-                            self.unexploredPaths.remove(path)
-
+                self.backTrace(nextPath)
                 self.pos = nextPath
             # Handle intersections
             elif(pathResult == ' '):
                 self.maze[self.pos[0]][self.pos[1]] = '.'
+                self.path.append(self.pos)
                 openDirs = self.getDirs([' ', '*'])
                 self.pos = openDirs.pop()
 
@@ -182,5 +148,5 @@ class BFS(Search):
     
     
 
-s = DFS(MazeLoader.loadMaze("../A1/mazes/medium_maze.txt"))
+s = DFS(MazeLoader.loadMaze("../A1/mazes/large_maze.txt"))
 s.search()
