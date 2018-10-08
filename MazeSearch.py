@@ -1,4 +1,5 @@
 import time
+import heapq
 
 class MazeLoader:
     def __init__(self):
@@ -36,6 +37,7 @@ class Search:
         self.unexploredPaths = []
         self.maze = maze
         self.pos = Search.findChar(self.maze, 'P')
+        visited = []
 
     # Returns the first occurence the character
     def findChar(maze, char):
@@ -165,6 +167,20 @@ class DFS(Search):
             pathResult = self.traceToXing()
 
         print("Goal found")
+
+class BFS(Search):
+    visited = []
+    
+    def search(self):    
+        pathResult = self.traceToXing()
+
+        while(pathResult != '*'):
+            
+            if(pathResult == '%'):
+                paths = self.getDirs([' ', '*'])
+                
+    
+    
 
 s = DFS(MazeLoader.loadMaze("../A1/mazes/medium_maze.txt"))
 s.search()
