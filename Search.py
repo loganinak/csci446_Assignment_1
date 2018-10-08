@@ -41,6 +41,27 @@ class Search:
                 queue.appendleft(neighbor)
        return False
 
+    def DFS(self, currentNode, finish, moves):
+       #create queue, visitedNodes needs to be reset
+       queue = deque([currentNode])
+       visitedNodes = []
+
+       while len(queue) > 0:
+          node = queue.pop()
+          if node in visitedNodes:
+             continue
+
+          visitedNodes.append(node)
+          if node.value == finish:
+              self.printResults("Depth First Search: ", node, moves)
+              return True
+          moves += 1
+          for neighbor in node.neighbors:
+             if neighbor not in visitedNodes and neighbor.value is not '%':
+                neighbor.previous = node
+                queue.append(neighbor)
+       return False
+
     def GREEDY(self,currentNode, finish, moves):
         #create heap queue for priority
         queue = []
@@ -100,11 +121,13 @@ if __name__=='__main__':
 
     moves = 0
 
-    #open_search = Search(open_maze)
-    #open_search.BFS(open_search.maze[open_search.px][open_search.py],'*', moves)
+    open_search = Search(open_maze)
+    open_search.DFS(open_search.maze[open_search.px][open_search.py],'*', moves)
+    open_search.BFS(open_search.maze[open_search.px][open_search.py],'*', moves)
     #open_search.GREEDY(open_search.maze[open_search.px][open_search.py], '*', moves)
 
     mediumSearch = Search(medium_maze)
+    mediumSearch.DFS(mediumSearch.maze[mediumSearch.px][mediumSearch.py],'*', moves)
     mediumSearch.BFS(mediumSearch.maze[mediumSearch.px][mediumSearch.py],'*', moves)
     mediumSearch.GREEDY(mediumSearch.maze[mediumSearch.px][mediumSearch.py], '*', moves)
 

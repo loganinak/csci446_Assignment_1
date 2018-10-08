@@ -1,1 +1,2 @@
-# csci446_Assignment_1
+# CSCI446PathFinding
+Maze/Pathfinding Assignment 
