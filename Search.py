@@ -115,16 +115,16 @@ class Search:
             node = node.previous
 if __name__=='__main__':
     #create mazes
-    open_maze = mazes.readMaze("open maze.txt")
-    medium_maze = mazes.readMaze("medium maze.txt")
-    large_maze = mazes.readMaze("large maze.txt")
+    open_maze = mazes.readMaze("mazes/open_maze.txt")
+    medium_maze = mazes.readMaze("mazes/medium_maze.txt")
+    large_maze = mazes.readMaze("mazes/large_maze.txt")
 
     moves = 0
 
     open_search = Search(open_maze)
-    open_search.DFS(open_search.maze[open_search.px][open_search.py],'*', moves)
-    open_search.BFS(open_search.maze[open_search.px][open_search.py],'*', moves)
-    #open_search.GREEDY(open_search.maze[open_search.px][open_search.py], '*', moves)
+    # open_search.DFS(open_search.maze[open_search.px][open_search.py],'*', moves)
+    # open_search.BFS(open_search.maze[open_search.px][open_search.py],'*', moves)
+    # open_search.GREEDY(open_search.maze[open_search.px][open_search.py], '*', moves)
 
     mediumSearch = Search(medium_maze)
     mediumSearch.DFS(mediumSearch.maze[mediumSearch.px][mediumSearch.py],'*', moves)
