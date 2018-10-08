@@ -1,5 +1,6 @@
 import time
 import heapq
+import math
 
 class MazeLoader:
     def __init__(self):
@@ -148,9 +149,42 @@ class BFS(Search):
     
 
 class AStar(Search):
+    goalPos = []
+
+    def calcDistToGoal(self, spot):
+        dist = abs(spot[0] - self.goalPos[0]) + abs(spot[1] - self.goalPos[1])
+        return dist
 
     def search(self):
-        pass
+        self.goalPos = Search.findChar(self.maze, '*')
+        pathResult = self.traceToXing()
 
-s = DFS(MazeLoader.loadMaze("../A1/mazes/large_maze.txt"))
+        while(pathResult != '*'):
+
+            # Handle dead ends
+            if(pathResult == '%'):
+                nextPath = self.unexploredPaths.pop()
+                self.backTrace(nextPath)
+                self.pos = nextPath
+            # Handle intersections
+            elif(pathResult == ' '):
+                self.maze[self.pos[0]][self.pos[1]] = '.'
+                self.path.append(self.pos)
+                openDirs = self.getDirs([' ', '*'])
+
+                openDirs.sort(key = lambda x: self.calcDistToGoal(x))
+
+                self.pos = openDirs.pop()
+
+                openDirs.reverse()
+                # Put the rest of possible directions in a stack
+                for path in openDirs:
+                    self.unexploredPaths.append(path)
+
+
+            pathResult = self.traceToXing()
+
+        print("Goal found")
+
+s = AStar(MazeLoader.loadMaze("../A1/mazes/large_maze.txt"))
 s.search()
