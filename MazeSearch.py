@@ -146,7 +146,11 @@ class BFS(Search):
                 paths = self.getDirs([' ', '*'])
                 
     
-    
+
+class AStar(Search):
+
+    def search(self):
+        pass
 
 s = DFS(MazeLoader.loadMaze("../A1/mazes/large_maze.txt"))
 s.search()
