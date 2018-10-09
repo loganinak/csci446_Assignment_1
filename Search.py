@@ -13,10 +13,10 @@ class Search:
         #figure out pacmans start and end places
         for i, row in enumerate(self.maze):
             for j, element in enumerate(row):
-                if element.value is 'P':
+                if element.value is 'P': # Set start point
                     self.px = i
                     self.py = j
-                elif element.value is '*':
+                elif element.value is '*': # Set finish point
                     self.fx = i
                     self.fy = j
 
@@ -26,6 +26,7 @@ class Search:
        visitedNodes = []
 
        while len(queue) > 0:
+          # Get the next space in the queue
           node = queue.pop()
           if node in visitedNodes:
              continue
@@ -34,15 +35,18 @@ class Search:
           if node.value == finish:
               self.printResults("Breadth First Search: ", node, moves)
               return True
+          # increment nodes expanded
           moves += 1
           for neighbor in node.neighbors:
+             # Ignore walls and visited nodes
              if neighbor not in visitedNodes and neighbor.value is not '%':
                 neighbor.previous = node
+                # Add new nodes to back of queue
                 queue.appendleft(neighbor)
        return False
 
     def DFS(self, currentNode, finish, moves):
-       #create queue, visitedNodes needs to be reset
+       #create stack, visitedNodes needs to be reset
        queue = deque([currentNode])
        visitedNodes = []
 
@@ -59,6 +63,7 @@ class Search:
           for neighbor in node.neighbors:
              if neighbor not in visitedNodes and neighbor.value is not '%':
                 neighbor.previous = node
+                # Add new nodes to top of the stack
                 queue.append(neighbor)
 
        return False
@@ -74,6 +79,7 @@ class Search:
         task += 1
 
         while len(queue) > 0:
+            # grab the node with the min value
             node = heapq.heappop(queue)[2]
 
             if node.value == finish:
@@ -85,6 +91,7 @@ class Search:
             for neighbor in node.neighbors:
                 if neighbor not in visitedNodes and neighbor.value is not '%':
                     neighbor.previous = node
+                    # Add nodes to the heap
                     heapq.heappush(queue, (self.manhattanDistance(neighbor, self.fx, self.fy), task, neighbor))
                     task += 1
         return False
@@ -150,9 +157,10 @@ if __name__=='__main__':
     moves = 0
 
     open_search = Search(open_maze)
-    # open_search.DFS(open_search.maze[open_search.px][open_search.py],'*', moves)
-    # open_search.BFS(open_search.maze[open_search.px][open_search.py],'*', moves)
-    # open_search.GREEDY(open_search.maze[open_search.px][open_search.py], '*', moves)
+    open_search.DFS(open_search.maze[open_search.px][open_search.py],'*', moves)
+    open_search.BFS(open_search.maze[open_search.px][open_search.py],'*', moves)
+    open_search.GREEDY(open_search.maze[open_search.px][open_search.py], '*', moves)
+    open_search.ASTAR(open_search.maze[open_search.px][open_search.py], '*', moves)
 
     mediumSearch = Search(medium_maze)
     mediumSearch.DFS(mediumSearch.maze[mediumSearch.px][mediumSearch.py],'*', moves)
@@ -160,6 +168,8 @@ if __name__=='__main__':
     mediumSearch.GREEDY(mediumSearch.maze[mediumSearch.px][mediumSearch.py], '*', moves)
     mediumSearch.ASTAR(mediumSearch.maze[mediumSearch.px][mediumSearch.py], '*', moves)
 
-    #large_search = Search(large_maze)
-    #large_search.BFS(large_search.maze[large_search.px][large_search.py], '*', moves)
-    #large_search.GREEDY(large_search.maze[large_search.px][large_search.py], '*', moves)
+    large_search = Search(large_maze)
+    large_search.DFS(large_search.maze[large_search.px][large_search.py], '*', moves)
+    large_search.BFS(large_search.maze[large_search.px][large_search.py], '*', moves)
+    large_search.GREEDY(large_search.maze[large_search.px][large_search.py], '*', moves)
+    large_search.ASTAR(large_search.maze[large_search.px][large_search.py], '*', moves)
