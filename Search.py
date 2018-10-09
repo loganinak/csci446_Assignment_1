@@ -60,6 +60,7 @@ class Search:
              if neighbor not in visitedNodes and neighbor.value is not '%':
                 neighbor.previous = node
                 queue.append(neighbor)
+
        return False
 
     def GREEDY(self,currentNode, finish, moves):
@@ -88,7 +89,31 @@ class Search:
                     task += 1
         return False
 
+    def ASTAR(self,currentNode, finish, moves):
+        #create heap queue for priority
+        queue = []
+        visitedNodes = []
+        heapq.heapify(queue)
+        #variable to always give unique identifiers to (priority, node) tuple
+        task = 0
+        heapq.heappush(queue, (0, task, currentNode))
+        task += 1
 
+        while len(queue) > 0:
+            node = heapq.heappop(queue)[2]
+
+            if node.value == finish:
+                self.printResults("A* Search: ", node, moves)
+                return True
+
+            visitedNodes.append(node)
+            moves += 1
+            for neighbor in node.neighbors:
+                if neighbor not in visitedNodes and neighbor.value is not '%':
+                    neighbor.previous = node
+                    heapq.heappush(queue, (self.manhattanDistance(node, self.px, self.py) + self.manhattanDistance(neighbor, self.fx, self.fy), task, neighbor))
+                    task += 1
+        return False
     
 
     def manhattanDistance(self, currentNode, x, y):
@@ -130,6 +155,7 @@ if __name__=='__main__':
     mediumSearch.DFS(mediumSearch.maze[mediumSearch.px][mediumSearch.py],'*', moves)
     mediumSearch.BFS(mediumSearch.maze[mediumSearch.px][mediumSearch.py],'*', moves)
     mediumSearch.GREEDY(mediumSearch.maze[mediumSearch.px][mediumSearch.py], '*', moves)
+    mediumSearch.ASTAR(mediumSearch.maze[mediumSearch.px][mediumSearch.py], '*', moves)
 
     #large_search = Search(large_maze)
     #large_search.BFS(large_search.maze[large_search.px][large_search.py], '*', moves)
