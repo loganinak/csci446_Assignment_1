@@ -120,15 +120,18 @@ class Search:
         return abs(currentNode.x - x) + abs(currentNode.y - y)
 
     def printResults(self, search, currentNode, cost):
-        print("{} \nCost: {}".format(search, cost))
-        print("Solved Maze:")
 
         #print path
         node = currentNode
+        steps = 0
         while node.previous is not None:
             if node.value is not 'P' and node.value is not '*':
+                steps += 1
                 node.value = '.'
             node = node.previous
+
+        print("{} \nCost: {}, Steps {}".format(search, cost, steps))
+        print("Solved Maze:")
         mazes.printMaze(self.maze)
 
         #clean maze
